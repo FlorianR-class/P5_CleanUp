@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+User --> (List Tasks)
+User --> (Add a task)
+User --> (Delete a task)
+User --> (Sort a tasks)
+
+(Sort a tasks) ..> (Sort by date)
+(Sort a tasks) ..> (Sort by name)
+
+
+@enduml

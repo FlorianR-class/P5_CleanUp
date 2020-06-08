@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.cleanup.todoc.database.TaskDatabase;
+import com.cleanup.todoc.database.CleanUpDatabase;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
@@ -29,7 +29,7 @@ public class TaskDaoTest {
     private static Task NEW_TASK_IDEA = new Task(2, PROJECT_ID, "Test 2",1);
     private static Task NEW_TASK_RESTAURANTS = new Task(3, PROJECT_ID, "Test 3",1);
     // FOR DATA
-    private TaskDatabase database;
+    private CleanUpDatabase database;
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -37,7 +37,7 @@ public class TaskDaoTest {
     @Before
     public void initDb() throws Exception {
         this.database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
-                TaskDatabase.class)
+                CleanUpDatabase.class)
                 .allowMainThreadQueries()
                 .build();
     }
@@ -77,19 +77,6 @@ public class TaskDaoTest {
         assertTrue(tasks.size() == 3);
     }
 
-    @Test
-    public void insertAndUpdateTask() throws InterruptedException {
-        // BEFORE : Adding demo project & demo tasks. Next, update task added & re-save it
-        this.database.projectDao().createProject(PROJECT_DEMO);
-        this.database.taskDao().insertTask(NEW_TASK_PLACE_TO_VISIT);
-        Task taskAdded = LiveDataTestUtil.getValue(this.database.taskDao().getTasks(PROJECT_ID)).get(0);
-        taskAdded.setSelected(true);
-        this.database.taskDao().updateTask(taskAdded);
-
-        //TEST
-        List<Task> tasks = LiveDataTestUtil.getValue(this.database.taskDao().getTasks(PROJECT_ID));
-        assertTrue(tasks.size() == 1 && tasks.get(0).getSelected());
-    }
 
     @Test
     public void insertAndDeleteTask() throws InterruptedException {

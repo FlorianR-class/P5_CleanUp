@@ -8,6 +8,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.cleanup.todoc.database.dao.ProjectDao;
 import com.cleanup.todoc.database.dao.TaskDao;
@@ -15,22 +16,22 @@ import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 @Database(entities = {Task.class, Project.class}, version = 1, exportSchema = false)
-public abstract class TaskDatabase extends RoomDatabase {
+public abstract class CleanUpDatabase extends RoomDatabase {
 
     // --- SINGLETON ---
-    private static volatile TaskDatabase INSTANCE;
+    private static volatile CleanUpDatabase INSTANCE;
 
     // --- DAO ---
     public abstract TaskDao taskDao();
     public abstract ProjectDao projectDao();
 
     // --- INSTANCE ---
-    public static TaskDatabase getInstance(Context context) {
+    public static CleanUpDatabase getInstance(Context context) {
         if (INSTANCE == null) {
-            synchronized (TaskDatabase.class) {
+            synchronized (CleanUpDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            TaskDatabase.class, "Database.db")
+                            CleanUpDatabase.class, "CleanUpDatabase.db")
                             .addCallback(prepopulateDatabase())
                             .build();
                 }
@@ -48,12 +49,25 @@ public abstract class TaskDatabase extends RoomDatabase {
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
 
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("id", 1);
-                contentValues.put("username", "Philippe");
-                contentValues.put("urlPicture", "https://oc-user.imgix.net/users/avatars/15175844164713_frame_523.jpg?auto=compress,format&q=80&h=100&dpr=2");
+                ContentValues contentValuesTar = new ContentValues();
+                contentValuesTar.put("id", 1L);
+                contentValuesTar.put("name", "Projet Tartampion");
+                contentValuesTar.put("color", 0xFFEADAD1);
 
-                db.insert("User", OnConflictStrategy.IGNORE, contentValues);
+                ContentValues contentValuesLuc = new ContentValues();
+                contentValuesLuc.put("id", 2L);
+                contentValuesLuc.put("name", "Projet Lucidia");
+                contentValuesLuc.put("color", 0xFFB4CDBA);
+
+                ContentValues contentValuesCir = new ContentValues();
+                contentValuesCir.put("id", 3L);
+                contentValuesCir.put("name", "Projet Circus");
+                contentValuesCir.put("color", 0xFFA3CED2);
+
+                db.insert("Project", OnConflictStrategy.IGNORE, contentValuesTar);
+                db.insert("Project", OnConflictStrategy.IGNORE, contentValuesLuc);
+                db.insert("Project", OnConflictStrategy.IGNORE, contentValuesCir);
+                Log.i("CleanUpDatabase", "prepopulateDatabase: Projects Inserted");
             }
         };
     }

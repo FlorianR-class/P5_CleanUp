@@ -1,7 +1,6 @@
 package com.cleanup.todoc.repository;
 
 import android.arch.lifecycle.LiveData;
-import android.content.ClipData;
 
 import com.cleanup.todoc.database.dao.TaskDao;
 import com.cleanup.todoc.model.Task;
@@ -18,7 +17,9 @@ public class TaskDataRepository {
 
     // --- GET ---
 
-    public LiveData<List<Task>> getTasks(long taskId){ return this.taskDao.getTasks(taskId); }
+//    public LiveData<List<Task>> getTasks(long taskId){ return this.taskDao.getTasks(taskId); }
+
+    public LiveData<List<Task>> getAllTask(){return taskDao.getAllTasks();}
 
     // --- CREATE ---
 
